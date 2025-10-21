@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>📋 تقييم مشكلة الكراسي - OFPPT Offshore</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #1e90ff, #f0f8ff);
+      font-family: 'Tajawal', sans-serif;
+      color: #002b5b;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      background: #002b5b;
+      color: white;
+      padding: 20px 0;
+      font-size: 22px;
+      letter-spacing: 1px;
+    }
+    .container {
+      max-width: 700px;
+      background: white;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+      margin-top: 15px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #b0c4de;
+      border-radius: 10px;
+      outline: none;
+      transition: 0.3s;
+      font-size: 15px;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #1e90ff;
+      box-shadow: 0 0 5px rgba(30,144,255,0.5);
+    }
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+    button {
+      background: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 25px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #005bbb;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    🧭 تقييم مشكلة الكراسي - OFPPT Offshore
+  </header>
+
+  <div class="container">
+    <h2>📨 المشكلة:</h2>
+    <p>هل تعاني من الكراسي؟</p>
+
+    <form id="responseForm">
+      <label>✅ نعم / ❌ لا</label>
+      <select id="issueAnswer" required>
+        <option value="">اختر الإجابة</option>
+        <option value="نعم">نعم</option>
+        <option value="لا">لا</option>
+      </select>
+
+      <label id="solutionsLabel" class="hidden">💡 حلول ممكنة (1 إلى 3)</label>
+      <textarea id="userSolutions" placeholder="اكتب حلولك المقترحة..." class="hidden"></textarea>
+
+      <button type="submit">إرسال ✅</button>
+    </form>
+  </div>
+
+  <!-- EmailJS SDK الجديد -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <script>
+    // تهيئة EmailJS
+    emailjs.init("WDlAyf26rsha6Qajm"); // 👈 Public Key ديالك
+
+    const form = document.getElementById("responseForm");
+    const issueAnswer = document.getElementById("issueAnswer");
+    const userSolutions = document.getElementById("userSolutions");
+    const solutionsLabel = document.getElementById("solutionsLabel");
+
+    // إظهار أو إخفاء حقل الحلول
+    issueAnswer.addEventListener("change", () => {
+      if (issueAnswer.value === "نعم") {
+        userSolutions.classList.remove("hidden");
+        solutionsLabel.classList.remove("hidden");
+      } else {
+        userSolutions.classList.add("hidden");
+        solutionsLabel.classList.add("hidden");
+        userSolutions.value = "";
+      }
+    });
+
+    // إرسال البيانات عبر EmailJS
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const answer = issueAnswer.value;
+      const solutions = userSolutions.value.trim() || "لا توجد حلول";
+      const date = new Date().toLocaleString();
+
+      const templateParams = {
+        issue: "هل تعاني من الكراسي؟",
+        answer: answer,
+        solutions: solutions,
+        date: date
+      };
+
+      emailjs.send("service_ldy79am", "template_5s20bcy", templateParams)
+        .then(() => {
+          alert("✅ تم إرسال الإجابة بنجاح! شكراً على مشاركتك 🙌");
+          form.reset();
+          userSolutions.classList.add("hidden");
+          solutionsLabel.classList.add("hidden");
+        })
+        .catch((err) => {
+          console.error("EmailJS Error:", err);
+          alert("❌ حدث خطأ أثناء الإرسال، تحقق من Console");
+        });
+    });
+  </script>
+
+</body>
+</html>
